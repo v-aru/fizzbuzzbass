@@ -1,6 +1,14 @@
 # FizzBuzzBass Game
 
-A very important customer has requested a new web application for playing FizzBuzzBass. 
+This is a simple web application for playing the FizzBuzzBass game. The frontend is built using React and styled with Tailwind CSS, while the backend is powered by FastAPI. The frontend sends a number to the backend, and based on the number's divisibility, the backend responds with either "Fizz", "Buzz", "Bass", or the number itself.
+
+# Prerequisites
+Before running the application locally, ensure that the following software is installed on your machine:
+
+- Node.js (for React frontend)
+- Python 3.8+ (for FastAPI backend)
+- npm (comes with Node.js)
+- pip (for Python dependencies)
 
 ## The requirements are as follows:
 - The application has one webform in the homepage.
@@ -11,7 +19,7 @@ A very important customer has requested a new web application for playing FizzBu
 - When the user enters any other number and submits the form, the UI shows the number given.
 
 Application Implementation:
-![alt text](image.png)
+![alt text](./assets/images/image.png)
 
 ## Development
 
