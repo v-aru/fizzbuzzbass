@@ -25,7 +25,8 @@ Application Implementation:
 
 ### Local Development
 
-To work locally, please install the dependencies using `npm i` first.
+To work locally, please install the dependencies using `npm i` first for FrontEnd components. 
+For the backend FastAPI component please use the following command to install dependencies `pip install -r requirements.txt`
 
 Run `npm run dev` to start a development server and open the displayed URL in a browser.
 
