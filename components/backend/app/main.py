@@ -19,16 +19,19 @@ class NumberInput (BaseModel) :
 
 #Logic for the fizzbuzzbass application
 def fizzbuzzbass (number: int) -> str :
-    if number % 3 == 0 and number % 5 == 0:
-        return "Bass"
-    elif number % 3 == 0:
-        return "Fizz"
-    elif number % 5 == 0:
-        return "Bass"
-    else:
-        return str(number)
+    if number != 0 :
+        if number % 3 == 0 and number % 5 == 0:
+            return "Bass"
+        elif number % 3 == 0:
+            return "Fizz"
+        elif number % 5 == 0:
+            return "Buzz"
+        else:
+            return str(number)
+    else :
+        return "Please enter a number other than zero!"
     
 @app.post("/api/fizzbuzzbass")
 async def get_fizzbuzzbass(input_data: NumberInput):
     result = fizzbuzzbass(input_data.number)
-    return {"Result of game is: ": result}
+    return {"result": result}
