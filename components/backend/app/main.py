@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field, field_validator
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -15,7 +15,14 @@ app.add_middleware(
 
 #Define the request model (required for input validation)
 class NumberInput (BaseModel) :
-    number: int
+    number: int = Field (..., description="A positive integer")
+
+    @field_validator("number")
+    def validate_positive_integer(cls, value):
+        if value <= 0:
+            raise ValueError("The number must be a positive integer")
+        return value
+    
 
 #Logic for the fizzbuzzbass application
 def fizzbuzzbass (number: int) -> str :
@@ -28,10 +35,15 @@ def fizzbuzzbass (number: int) -> str :
             return "Buzz"
         else:
             return str(number)
+    elif number < 0:
+        return "Input should only be a positive integer!"
     else :
         return "Please enter a number other than zero!"
     
 @app.post("/api/fizzbuzzbass")
 async def get_fizzbuzzbass(input_data: NumberInput):
-    result = fizzbuzzbass(input_data.number)
-    return {"result": result}
+    try:
+        result = fizzbuzzbass(input_data.number)
+        return {"result": result}
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))

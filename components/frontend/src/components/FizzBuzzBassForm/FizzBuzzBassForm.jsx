@@ -18,17 +18,19 @@ const FizzBuzzBassForm = () => {
       if (response.data && response.data.result) {
         setResult(response.data.result);
         setError(null);
-      } else {
-        setResult(null);
-      }
-      
+      }      
     } catch (error) {
-      setError("Error: Could not process your request");
+      if (error.response && error.response.data && Array.isArray(error.response.data.detail)) {
+        const errorMessages = error.response.data.detail.map((err) => err.msg).join(", ");
+        setError(errorMessages);
+      } else {
+        setError("Error: Could not process your request");
+      }
       setResult(null);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
-  }
+  };
 
   return (
     <div className="form-container">
