@@ -1,11 +1,21 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useRef } from "react";
+import axios from 'axios';
+import './FizzBuzzBassForm.css'
+
 
 const FizzBuzzBassForm = () => {
   const [number, setNumber] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,9 +30,13 @@ const FizzBuzzBassForm = () => {
         setError(null);
       }      
     } catch (error) {
-      if (error.response && error.response.data && Array.isArray(error.response.data.detail)) {
-        const errorMessages = error.response.data.detail.map((err) => err.msg).join(", ");
-        setError(errorMessages);
+      if (error.response && error.response.data) {
+        if (Array.isArray(error.response.data.detail)) {
+          const errorMessages = error.response.data.detail.map((err) => err.msg).join(", ");
+          setError(errorMessages);
+        } else {
+          setError(error.response.data.detail || "Error: Could not process your request");
+        }
       } else {
         setError("Error: Could not process your request");
       }
@@ -35,13 +49,14 @@ const FizzBuzzBassForm = () => {
   return (
     <div className="form-container">
       <div className="form-box">
-        <h1>FizzBuzzBass</h1>
+        <h2>Enter a number</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="number"
             value={number}
             onChange={(e) => setNumber(e.target.value)}
             placeholder="Enter a number"
+            ref={inputRef}
           />
           <button
             type="submit"

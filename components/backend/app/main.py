@@ -12,7 +12,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 #Define the request model (required for input validation)
 class NumberInput (BaseModel) :
     number: int = Field (..., description="A positive integer")
@@ -26,7 +25,7 @@ class NumberInput (BaseModel) :
 
 #Logic for the fizzbuzzbass application
 def fizzbuzzbass (number: int) -> str :
-    if number != 0 :
+    if number > 0 :
         if number % 3 == 0 and number % 5 == 0:
             return "Bass"
         elif number % 3 == 0:
@@ -35,10 +34,8 @@ def fizzbuzzbass (number: int) -> str :
             return "Buzz"
         else:
             return str(number)
-    elif number < 0:
+    else:
         return "Input should only be a positive integer!"
-    else :
-        return "Please enter a number other than zero!"
     
 @app.post("/api/fizzbuzzbass")
 async def get_fizzbuzzbass(input_data: NumberInput):
