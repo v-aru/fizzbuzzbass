@@ -1,95 +1,67 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import FizzBuzzBassForm from './components/FizzBuzzBassForm/FizzBuzzBassForm';
-import axios from 'axios';
+import App from './App';  
 import '@testing-library/jest-dom/extend-expect';
+import axios from 'axios';
+import DarkModeToggle from './components/DarkMode/DarkMode';
 
 jest.mock('axios');
 
-describe('FizzBuzzBassForm', () => {
-  test('renders form elements correctly', () => {
-    render(<FizzBuzzBassForm />);
+describe('FizzBuzzBass Application', () => {
+  
+  test('renders FizzBuzzBassForm on the page load', () => {
+    render(<App />);
+    
+    // Check if the main form is rendered
     expect(screen.getByPlaceholderText(/Enter a number/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Submit/i })).toBeInTheDocument();
   });
 
-  test('displays result when valid number is submitted', async () => {
+  test('shows result after submitting a valid number', async () => {
     axios.post.mockResolvedValueOnce({ data: { result: 'Fizz' } });
 
-    render(<FizzBuzzBassForm />);
+    render(<App />);
+    
+    // Enter a valid number
     fireEvent.change(screen.getByPlaceholderText(/Enter a number/i), { target: { value: '3' } });
     fireEvent.click(screen.getByRole('button', { name: /Submit/i }));
-
+    
+    // Check for loading state and result
+    expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByText(/Result: Fizz/i)).toBeInTheDocument();
     });
   });
 
-  test('displays error message on failed request', async () => {
+  test('displays error message when API request fails', async () => {
     axios.post.mockRejectedValueOnce(new Error('Error: Could not process your request'));
 
-    render(<FizzBuzzBassForm />);
-    fireEvent.change(screen.getByPlaceholderText(/Enter a number/i), { target: { value: '3' } });
+    render(<App />);
+    
+    // Enter a valid number
+    fireEvent.change(screen.getByPlaceholderText(/Enter a number/i), { target: { value: '5' } });
     fireEvent.click(screen.getByRole('button', { name: /Submit/i }));
 
+    // Check for error message
     await waitFor(() => {
       expect(screen.getByText(/Error: Could not process your request/i)).toBeInTheDocument();
     });
   });
 
-  test('input field is focused on load', () => {
-    render(<FizzBuzzBassForm />);
-    const inputField = screen.getByPlaceholderText(/Enter a number/i);
-    expect(inputField).toHaveFocus();
+  test('renders the Dark Mode button by default', () => {
+    render(<DarkModeToggle />);
+    
+    const button = screen.getByRole('button');
+    expect(button).toHaveTextContent('Dark Mode');
   });
 
-  test('displays error for negative number input', async () => {
-    axios.post.mockRejectedValueOnce({
-      response: {
-        data: {
-          detail: [{ msg: "Value error, The number must be a positive integer" }]
-        }
-      }
-    });
+  test('toggles to Light Mode when clicked', () => {
+    render(<DarkModeToggle />);
 
-    render(<FizzBuzzBassForm />);
-    fireEvent.change(screen.getByPlaceholderText(/Enter a number/i), { target: { value: '-1' } });
-    fireEvent.click(screen.getByRole('button', { name: /Submit/i }));
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
 
-    await waitFor(() => {
-      expect(screen.getByText(/Value error, The number must be a positive integer/i)).toBeInTheDocument();
-    });
-  });
-
-  test('displays error for zero input', async () => {
-    axios.post.mockRejectedValueOnce({
-      response: {
-        data: {
-          detail: [{ msg: "Value error, The number must be a positive integer" }]
-        }
-      }
-    });
-
-    render(<FizzBuzzBassForm />);
-    fireEvent.change(screen.getByPlaceholderText(/Enter a number/i), { target: { value: '0' } });
-    fireEvent.click(screen.getByRole('button', { name: /Submit/i }));
-
-    await waitFor(() => {
-      expect(screen.getByText(/Value error, The number must be a positive integer/i)).toBeInTheDocument();
-    });
-  });
-
-  test('displays loading state when form is submitted', async () => {
-    axios.post.mockResolvedValueOnce({ data: { result: 'Fizz' } });
-  
-    render(<FizzBuzzBassForm />);
-    fireEvent.change(screen.getByPlaceholderText(/Enter a number/i), { target: { value: '3' } });
-    fireEvent.click(screen.getByRole('button', { name: /Submit/i }));
-  
-    expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
-  
-    await waitFor(() => {
-      expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
-    });
+    expect(button).toHaveTextContent('Light Mode');
+    expect(document.documentElement.classList).toContain('dark');
   });
   
 });

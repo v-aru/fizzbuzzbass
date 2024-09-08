@@ -56,7 +56,7 @@ const FizzBuzzBassForm = () => {
               onChange={(e) => setNumber(e.target.value)}
               placeholder="Enter a number"
               ref={inputRef}
-              className="border-2 border-[#d1d5db] p-3 w-full max-w-xs rounded-lg text-lg placeholder:text-gray-400 bg-white shadow-md transition-all duration-300 focus:border-[#535C91] focus:ring-2 focus:ring-[#535C91] outline-none text-center"
+              className="border-2 border-[#d1d5db] p-3 w-full max-w-xs rounded-lg text-lg placeholder:text-gray-400 bg-white shadow-md transition-all duration-300 focus:border-[#535C91] focus:ring-2 focus:ring-[#535C91] outline-none text-center text-[#333]"
             />
             <br/>
             <button

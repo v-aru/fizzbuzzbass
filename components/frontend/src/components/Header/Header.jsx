@@ -3,7 +3,7 @@ import "../../index.css";
 
 const Header = () => {
   return (
-    <header className="bg-[#365486] dark:bg-[#17153B] text-[#EEEEEE] dark:text-white py-6 shadow-md w-full mx-auto flex items-center justify-center">
+    <header className="bg-[#16325B] dark:bg-[#17153B] text-[#EEEEEE] dark:text-white py-6 shadow-md w-full mx-auto flex items-center justify-center">
       <div className="flex justify-center items-center gap-4 mt-2 text-center max-w-max h-full">
         {/* Animated SVG Icon */}
         <svg
